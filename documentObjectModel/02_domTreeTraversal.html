@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Tree Traversal | Parent, Children & Siblings</title>
+</head>
+<body style="background-color: #212121; color: #fff;">
+    <!-- Parent Container -->
+    <div class="parent-container">
+        <!-- HTML Comment Node (Included in DOM childNodes count!) -->
+        <div class="day-card">Monday</div>
+        <div class="day-card">Tuesday</div>
+        <div class="day-card">Wednesday</div>
+        <div class="day-card">Thursday</div>
+    </div>
+
+    <!--
+      ==============================================================================
+      JAVASCRIPT DOM TRAVERSAL REFERENCE SCRIPT
+      ==============================================================================
+    -->
+    <script>
+        /**
+         * ==============================================================================
+         * DOM TREE NAVIGATION: Parent, Child, & Sibling Relationships
+         * ==============================================================================
+         * Key Concepts Covered:
+         * 1. Parent to Child Navigation (`.children`, `.firstElementChild`, `.lastElementChild`)
+         * 2. Child to Parent Navigation (`.parentElement`)
+         * 3. Sibling Navigation (`.nextElementSibling`, `.previousElementSibling`)
+         * 4. Nodes vs Elements (`childNodes` vs `children`) - Crucial Concept!
+         */
+
+        // ------------------------------------------------------------------------------
+        // 1. NAVIGATING FROM PARENT TO CHILDREN
+        // ------------------------------------------------------------------------------
+        const parentElement = document.querySelector('.parent-container');
+
+        console.log("--- Parent Element ---");
+        console.log("Parent Element Node:", parentElement);
+
+        // `.children` returns an HTMLCollection of ONLY the element nodes (ignores text/comments)
+        console.log("HTMLCollection of Children:", parentElement.children);
+        console.log("Second Child Content:", parentElement.children[1].innerHTML); // "Tuesday"
+
+        // Iterating through children using a standard for loop
+        console.log("\n--- Iterating Through Parent Children ---");
+        for (let index = 0; index < parentElement.children.length; index++) {
+            const currentChild = parentElement.children[index];
+            console.log(`Child ${index + 1}:`, currentChild.innerHTML);
+        }
+
+        // Modifying inline style of a specific child element
+        parentElement.children[1].style.color = "orange";
+
+        // Accessing First and Last Child Elements directly
+        console.log("\n--- First & Last Element Child ---");
+        console.log("First Element Child:", parentElement.firstElementChild); // <div class="day-card">Monday</div>
+        console.log("Last Element Child:", parentElement.lastElementChild);   // <div class="day-card">Thursday</div>
+
+
+        // ------------------------------------------------------------------------------
+        // 2. NAVIGATING FROM CHILD TO PARENT & SIBLINGS
+        // ------------------------------------------------------------------------------
+        // `querySelector` returns the FIRST matching element found in the DOM (.day-card -> Monday)
+        const firstDayCard = document.querySelector('.day-card');
+
+        console.log("\n--- Child to Parent & Sibling Traversal ---");
+        console.log("Current Element (Monday):", firstDayCard);
+
+        // Traversing Upwards: Accessing the direct parent element
+        console.log("Parent Element of Monday:", firstDayCard.parentElement);
+
+        // Traversing Sideways: Accessing adjacent sibling elements
+        console.log("Next Sibling Element (Tuesday):", firstDayCard.nextElementSibling);
+        // Note: You can also use `.previousElementSibling` to move backward in the DOM tree
+
+
+        // ------------------------------------------------------------------------------
+        // 3. CRUCIAL CONCEPT: NODES VS ELEMENTS (childNodes vs children)
+        // ------------------------------------------------------------------------------
+        /*
+         * CONCEPT BREAKDOWN FOR REVISION / INTERVIEWS:
+         * 
+         * 1. `.children` : Returns ONLY HTML Element nodes (<div>, <p>, <span>, etc.).
+         * 
+         * 2. `.childNodes` : Returns ALL DOM Nodes inside the container, including:
+         *    - Element Nodes (HTML tags)
+         *    - Text Nodes (includes whitespace, line breaks, and newlines between HTML tags)
+         *    - Comment Nodes (<!-- comment -->)
+         * 
+         * Notice why parentElement.childNodes length is larger than parentElement.children.length:
+         * Every line break/newline between `<div>` tags counts as a "text" node!
+         */
+
+        console.log("\n--- DOM Nodes Analysis ---");
+        console.log("All Node Types (childNodes):", parentElement.childNodes);
+        console.log("Element Count (.children.length):", parentElement.children.length); // 4
+        console.log("Total Node Count (.childNodes.length):", parentElement.childNodes.length); // Usually 9 or 11 depending on spacing/comments
+    </script>
+</body>
+</html>
