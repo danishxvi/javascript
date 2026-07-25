@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Selectors & Manipulation Basics</title>
+    <style>
+        .bg-black {
+            background-color: #212121;
+            color: #fff;
+        }
+        .highlight {
+            color: #ff9900;
+        }
+    </style>
+</head>
+<body class="bg-black">
+    <div class="parent-container">
+        <!-- Element with ID, Class, and inline styling for innerText vs textContent demo -->
+        <h1 id="title" class="heading">
+            DOM learning on Chai aur code 
+            <!-- Inline style 'display: none' hides this text visually on the browser -->
+            <span style="display: none;">test text</span>
+        </h1>
+        <h2>Lorem ipsum dolor sit.</h2>
+        <h2>Lorem ipsum dolor sit.</h2>
+        <h2>Lorem ipsum dolor sit.</h2>
+        <p>Lorem ipsum dolor sit amet.</p>
+        
+        <!-- Input field demo for attribute manipulation -->
+        <input type="password" name="userPassword" id="passwordInput">
+
+        <ul>
+            <li class="list-item">one</li>
+            <li class="list-item">two</li>
+            <li class="list-item">three</li>
+            <li class="list-item">four</li>
+        </ul>
+    </div>
+
+    <!-- 
+      ==============================================================================
+      JAVASCRIPT DOM MANIPULATION REFERENCE SCRIPT
+      ==============================================================================
+    -->
+    <script>
+        /**
+         * ==============================================================================
+         * DOM SELECTORS & ELEMENT MANIPULATION
+         * ==============================================================================
+         * Key Concepts Covered:
+         * 1. Selecting Elements (`getElementById`, `querySelector`, `querySelectorAll`)
+         * 2. `innerText` vs `textContent` vs `innerHTML` (Crucial Interview Topic!)
+         * 3. Getting & Setting Attributes (`getAttribute`, `setAttribute`)
+         * 4. NodeList vs HTMLCollection & Array Conversion
+         */
+
+        // ------------------------------------------------------------------------------
+        // 1. SELECTING BY ID & ATTRIBUTE MANIPULATION
+        // ------------------------------------------------------------------------------
+        const mainTitleHeading = document.getElementById('title');
+
+        console.log("--- Element Selection ---");
+        console.log("Selected Element:", mainTitleHeading);
+
+        // Fetching Attributes
+        console.log("ID Attribute:", mainTitleHeading.getAttribute('id')); // "title"
+        console.log("Class Attribute:", mainTitleHeading.getAttribute('class')); // "heading"
+
+        // Setting / Overriding Attributes
+        // Note: setAttribute overrides the entire attribute value
+        mainTitleHeading.setAttribute('class', 'heading highlight'); 
+
+
+        // ------------------------------------------------------------------------------
+        // 2. TEXT EXTRACTION DIFFERENCES (innerText vs textContent vs innerHTML)
+        // ------------------------------------------------------------------------------
+        /*
+         * DIFFERENCES TO REMEMBER FOR REVISION:
+         * - innerText   : Respects CSS styling. Does NOT show hidden text (`display: none`).
+         * - textContent : Ignores CSS styling. Shows ALL plain text inside the node (including hidden text).
+         * - innerHTML   : Returns full raw HTML content inside the element, including inner tags (e.g., <span>).
+         */
+
+        console.log("\n--- Text Content Extraction Breakdown ---");
+        console.log("1. innerText   ->", mainTitleHeading.innerText); 
+        // Output: "DOM learning on Chai aur code" (Hides the span because display:none)
+
+        console.log("2. textContent ->", mainTitleHeading.textContent); 
+        // Output: "DOM learning on Chai aur code test text" (Includes hidden text)
+
+        console.log("3. innerHTML   ->", mainTitleHeading.innerHTML); 
+        // Output: "DOM learning on Chai aur code <span style="display: none;">test text</span>"
+
+
+        // ------------------------------------------------------------------------------
+        // 3. QUERY SELECTORS (CSS Style Selectors)
+        // ------------------------------------------------------------------------------
+        // querySelector: Returns the FIRST matching element found in the DOM tree
+        const firstSubHeading = document.querySelector('h2');
+        const passwordInputField = document.querySelector('input[type="password"]');
+        const firstListItem = document.querySelector('.list-item');
+
+        firstSubHeading.style.color = 'lightgreen'; // Direct style modification
+
+
+        // ------------------------------------------------------------------------------
+        // 4. MULTIPLE ELEMENTS: NodeList vs HTMLCollection
+        // ------------------------------------------------------------------------------
+
+        // --- QuerySelectorAll returns a NodeList ---
+        // A NodeList is array-like and DOES support native `.forEach()` directly!
+        const allListItemsNodeList = document.querySelectorAll('.list-item');
+
+        console.log("\n--- NodeList Iteration ---");
+        allListItemsNodeList.forEach((listItem, index) => {
+            listItem.style.color = 'cyan';
+            console.log(`NodeList Item ${index + 1}: ${listItem.textContent}`);
+        });
+
+        // --- getElementsByClassName returns an HTMLCollection ---
+        // An HTMLCollection is array-like BUT does NOT support `.forEach()` directly!
+        const allListItemsHTMLCollection = document.getElementsByClassName('list-item');
+
+        // ❌ allListItemsHTMLCollection.forEach(...) -> Uncaught TypeError!
+
+        // ✅ Solution: Convert HTMLCollection to a true Array using Array.from()
+        const listItemsArray = Array.from(allListItemsHTMLCollection);
+
+        console.log("\n--- HTMLCollection Converted to Array ---");
+        listItemsArray.forEach((item) => {
+            item.style.padding = '4px';
+            console.log("Array Converted Item:", item.textContent);
+        });
+    </script>
+</body>
+</html>
