@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOM Manipulation | Add, Edit & Remove Elements</title>
+</head>
+<body style="background-color: #212121; color: #fff;">
+    <!-- Parent Unordered List -->
+    <ul class="language-list">
+        <li>JavaScript</li>
+    </ul>
+
+    <!--
+      ==============================================================================
+      JAVASCRIPT DOM CRUD OPERATIONS REFERENCE SCRIPT
+      ==============================================================================
+    -->
+    <script>
+        /**
+         * ==============================================================================
+         * DOM CRUD OPERATIONS: Create, Read, Update & Delete
+         * ==============================================================================
+         * Key Concepts Covered:
+         * 1. Naive vs. Optimized DOM Insertion (Performance Implications)
+         * 2. Modifying Existing Elements (`replaceWith`, `outerHTML`, `textContent`)
+         * 3. Removing Elements from the DOM Tree (`remove()`)
+         */
+
+        const languageListContainer = document.querySelector('.language-list');
+
+        // ------------------------------------------------------------------------------
+        // 1. CREATING & ADDING ELEMENTS
+        // ------------------------------------------------------------------------------
+
+        // --- Approach A: Naive / Sub-optimal Insertion ---
+        // Using `innerHTML` forces the browser to parse the entire string as HTML.
+        // For large-scale DOM operations, constantly re-parsing strings causes extra reflows.
+        function addLanguageNaive(languageName) {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `${languageName}`;
+            languageListContainer.appendChild(listItem);
+        }
+
+        addLanguageNaive("Python");
+        addLanguageNaive("TypeScript");
+
+
+        // --- Approach B: Optimized Insertion (Best Practice) ---
+        // Using `document.createTextNode` attaches a raw text node directly in memory.
+        // It skips string parsing and is far more efficient for bulk DOM updates.
+        function addLanguageOptimized(languageName) {
+            const listItem = document.createElement('li');
+            const textNode = document.createTextNode(languageName);
+            listItem.appendChild(textNode);
+            languageListContainer.appendChild(listItem);
+        }
+
+        addLanguageOptimized("Golang");
+
+
+        // ------------------------------------------------------------------------------
+        // 2. UPDATING / EDITING DOM ELEMENTS
+        // ------------------------------------------------------------------------------
+
+        // --- Method 1: Using element.replaceWith() ---
+        // Target the second <li> child ("Python")
+        const secondListItem = document.querySelector("li:nth-child(2)");
+
+        // Create a new element to swap in
+        const replacementListItem = document.createElement('li');
+        replacementListItem.textContent = "Mojo";
+
+        // Replaces target node in the DOM tree with the new element
+        secondListItem.replaceWith(replacementListItem);
+
+
+        // --- Method 2: Replacing via outerHTML ---
+        // Target the first <li> child ("JavaScript")
+        const firstListItem = document.querySelector("li:first-child");
+
+        // Overwrites the entire element tag and its content directly
+        firstListItem.outerHTML = '<li>TypeScript</li>';
+
+
+        // ------------------------------------------------------------------------------
+        // 3. REMOVING ELEMENTS
+        // ------------------------------------------------------------------------------
+
+        // Target the last <li> child ("Golang")
+        const lastListItem = document.querySelector('li:last-child');
+
+        // Removes the element completely from the DOM tree
+        lastListItem.remove();
+
+
+        // ------------------------------------------------------------------------------
+        // 4. REVISION SUMMARY / INTERVIEW TIPS
+        // ------------------------------------------------------------------------------
+        /*
+         * QUICK SUMMARY FOR REVISION:
+         * 
+         * - Insertion: Prefer `createTextNode()` + `appendChild()` over `innerHTML` for better performance.
+         * - Replacement: `element.replaceWith(newElement)` is clean and explicit; `outerHTML` works well for string templates.
+         * - Deletion: `element.remove()` directly targets and deletes the node (modern approach vs old `parent.removeChild(child)`).
+         */
+    </script>
+</body>
+</html>
