@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Element Creation | DOM Manipulation</title>
+</head>
+<body style="background-color: #212121; color: #fff;">
+    
+    <!-- 
+      ==============================================================================
+      JAVASCRIPT DYNAMIC DOM CREATION REFERENCE SCRIPT
+      ==============================================================================
+    -->
+    <script>
+        /**
+         * ==============================================================================
+         * DOM CREATION & MANIPULATION: document.createElement() & Node Appending
+         * ==============================================================================
+         * Key Concepts Covered:
+         * 1. Dynamic Element Creation (`document.createElement`)
+         * 2. Setting Properties & Attributes (`className`, `id`, `setAttribute`, `style`)
+         * 3. Efficient Text Insertion (`createTextNode` vs `innerText`)
+         * 4. Attaching Nodes to the Live DOM Tree (`appendChild`)
+         */
+
+        // ------------------------------------------------------------------------------
+        // 1. CREATING AN ELEMENT IN MEMORY
+        // ------------------------------------------------------------------------------
+        // `createElement` instantiates a new HTML element in browser memory.
+        // Note: At this stage, the element exists ONLY in JavaScript memory, NOT on the webpage body yet!
+        const cardContainer = document.createElement('div');
+
+        console.log("Newly Created Element (In Memory):", cardContainer);
+
+
+        // ------------------------------------------------------------------------------
+        // 2. CONFIGURING PROPERTIES, ATTRIBUTES, & STYLES
+        // ------------------------------------------------------------------------------
+        // Assigning Class Name
+        cardContainer.className = "main-card-container";
+
+        // Assigning a Dynamic ID (Using Math.random for demonstration)
+        const uniqueRandomId = Math.round(Math.random() * 10 + 1);
+        cardContainer.id = `card-id-${uniqueRandomId}`;
+
+        // Setting HTML Attributes (`setAttribute` adds/overrides custom or standard attributes)
+        cardContainer.setAttribute("title", "Generated Card Element");
+        cardContainer.setAttribute("data-role", "custom-widget"); // Bonus: Adding a custom data-* attribute
+
+        // Applying Inline CSS Styles
+        cardContainer.style.backgroundColor = "green";
+        cardContainer.style.padding = "12px";
+        cardContainer.style.borderRadius = "8px";
+        cardContainer.style.marginTop = "20px";
+
+
+        // ------------------------------------------------------------------------------
+        // 3. ADDING TEXT CONTENT: createTextNode() vs innerText
+        // ------------------------------------------------------------------------------
+        /*
+         * PERFORMANCE & BEST PRACTICE TIP FOR REVISION:
+         * 
+         * Option A: `cardContainer.innerText = "Chai aur code";`
+         * - Overwrites existing content.
+         * - Forces a browser repaint/reflow step because it evaluates computed layout styles.
+         * 
+         * Option B: `document.createTextNode("Chai aur code")` + `appendChild()`
+         * - Creates a raw Text Node directly in memory.
+         * - More performant when performing bulk DOM insertions because it avoids extra layout recalculations.
+         */
+
+        // Preferred Approach for Performance: Creating a Text Node
+        const cardTextNode = document.createTextNode("Chai aur code - Dynamic Card");
+        cardContainer.appendChild(cardTextNode);
+
+
+        // ------------------------------------------------------------------------------
+        // 4. ATTACHING TO THE LIVE DOM
+        // ------------------------------------------------------------------------------
+        // Up to this line, `cardContainer` was in memory. 
+        // `document.body.appendChild()` pushes it into the visible DOM tree.
+        document.body.appendChild(cardContainer);
+
+        console.log("Final Configured Element attached to <body>:", cardContainer);
+    </script>
+</body>
+</html>
