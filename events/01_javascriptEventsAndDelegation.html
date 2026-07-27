@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Events | Propagation, Delegation & Event Object</title>
+</head>
+<body style="background-color: #414141; color: aliceblue;">
+    <h2>Amazing Image Gallery</h2>
+    <div>
+        <!-- Unordered List Container for Images -->
+        <ul id="imageGallery">
+            <li><img width="200px" id="photoshop" src="https://images.pexels.com/photos/3561339/pexels-photo-3561339.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load" alt="Photoshop"></li>
+            <li><img width="200px" id="japan" src="https://images.pexels.com/photos/3532553/pexels-photo-3532553.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load" alt="Japan"></li>
+            <li><img width="200px" id="river" src="https://images.pexels.com/photos/3532551/pexels-photo-3532551.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load" alt="River"></li>
+            <li><img width="200px" id="owl" src="https://images.pexels.com/photos/3532552/pexels-photo-3532552.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load" alt="Owl"></li>
+            <li><img width="200px" id="prayer" src="https://images.pexels.com/photos/2522671/pexels-photo-2522671.jpeg?auto=compress&cs=tinysrgb&w=1600&lazy=load" alt="Prayer"></li>
+            <li><a style="color: aliceblue;" href="https://google.com" id="googleLink">Google</a></li>
+        </ul>
+    </div>
+
+    <!--
+      ==============================================================================
+      JAVASCRIPT EVENTS REFERENCE SCRIPT
+      ==============================================================================
+    -->
+    <script>
+        /**
+         * ==============================================================================
+         * JAVASCRIPT EVENTS: Handlers, Event Object, Propagation & Delegation
+         * ==============================================================================
+         * Key Concepts Covered:
+         * 1. Modern Listener vs Inline Handlers (`addEventListener` vs `onclick`)
+         * 2. Essential Event Object Properties (`target`, `type`, `clientX`, etc.)
+         * 3. Event Propagation: Bubbling vs Capturing (The 3rd argument in addEventListener)
+         * 4. Stopping Propagation (`stopPropagation()`) & Preventing Default (`preventDefault()`)
+         * 5. Event Delegation Pattern (Attaching 1 listener to parent instead of many to children)
+         */
+
+        // ------------------------------------------------------------------------------
+        // 1. INLINE PROPERTY vs addEventListener()
+        // ------------------------------------------------------------------------------
+        /*
+         * Avoid: document.getElementById('owl').onclick = function() { ... }
+         * Why? It can be overwritten easily and doesn't support multiple listeners 
+         * or event propagation phases (capturing vs bubbling).
+         * 
+         * Legacy Note: `attachEvent()` was used in Internet Explorer 8 and earlier.
+         */
+
+
+        // ------------------------------------------------------------------------------
+        // 2. ESSENTIAL EVENT OBJECT (e) PROPERTIES TO REMEMBER FOR REVISION
+        // ------------------------------------------------------------------------------
+        /*
+         * - Event Type & Timing : e.type, e.timeStamp
+         * - Behaviour Control   : e.preventDefault(), e.stopPropagation()
+         * - Element References  : e.target (element that triggered event), 
+         *                         e.currentTarget (element holding the listener),
+         *                         e.srcElement (legacy name for target)
+         * - Screen & Mouse Coordinates: e.clientX, e.clientY, e.screenX, e.screenY, e.pageX, e.pageY
+         * - Keyboard / Modifiers: e.altKey, e.ctrlKey, e.shiftKey, e.keyCode / e.key
+         */
+
+
+        // ------------------------------------------------------------------------------
+        // 3. EVENT PROPAGATION: BUBBLING VS CAPTURING
+        // ------------------------------------------------------------------------------
+        /*
+         * Syntax: element.addEventListener(eventType, callbackFunction, useCapture)
+         * 
+         * - useCapture = false (DEFAULT): "Event Bubbling" -> Triggers from INNERMOST target node UPWARDS to ancestors.
+         * - useCapture = true: "Event Capturing" -> Triggers from OUTERMOST ancestor DOWNWARDS to target node.
+         */
+
+        // --- Example: Event Bubbling Demonstration ---
+        const galleryParent = document.getElementById('imageGallery');
+        const owlImage = document.getElementById('owl');
+
+        // Listener on Parent <ul>
+        galleryParent.addEventListener('click', function (event) {
+            console.log("Parent <ul> clicked (Bubbling Phase)");
+        }, false);
+
+        // Listener on Child <img>
+        owlImage.addEventListener('click', function (event) {
+            console.log("Owl <img> clicked");
+            
+            // Stopping Bubbling: Prevents the event from traveling up to the <ul>
+            event.stopPropagation(); 
+        }, false);
+
+
+        // ------------------------------------------------------------------------------
+        // 4. PREVENTING DEFAULT BEHAVIOUR
+        // ------------------------------------------------------------------------------
+        const googleLink = document.getElementById('googleLink');
+
+        googleLink.addEventListener('click', function (event) {
+            // Stops the anchor tag <a> from navigating to https://google.com
+            event.preventDefault();
+            
+            // Prevents event bubbling to parent <ul>
+            event.stopPropagation();
+            
+            console.log("Google link click intercepted - default navigation prevented!");
+        }, false);
+
+
+        // ------------------------------------------------------------------------------
+        // 5. EVENT DELEGATION PATTERN (PERFORMANCE BEST PRACTICE)
+        // ------------------------------------------------------------------------------
+        /*
+         * CONCEPT:
+         * Instead of attaching 100 individual event listeners to 100 `<li>` or `<img>` elements,
+         * attach ONE single listener to the parent container (`#imageGallery`) and use `event.target` 
+         * to identify which child was clicked.
+         * 
+         * Benefit: Drastically lowers memory consumption and works for dynamically added items!
+         */
+
+        // Task: Click an image to remove its parent <li> from the list
+        galleryParent.addEventListener('click', function (event) {
+            console.log("Clicked Element Tag Name:", event.target.tagName);
+
+            // Guard Clause: Ensure the user actually clicked an <img> (and not the <ul> or <a>)
+            if (event.target.tagName === 'IMG') {
+                console.log("Clicked Image ID:", event.target.id);
+
+                // Target the parent <li> element containing this image
+                const parentListItem = event.target.parentNode;
+
+                // --- Modern Element Removal ---
+                parentListItem.remove();
+
+                // --- Legacy Browser Alternative ---
+                // parentListItem.parentNode.removeChild(parentListItem);
+            }
+        });
+    </script>
+</body>
+</html>
