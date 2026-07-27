@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asynchronous JavaScript | setTimeout & clearTimeout</title>
+</head>
+<body style="background-color: #212121; color: #fff;">
+    <!-- Heading whose text will change asynchronously -->
+    <h1 id="headingText">Chai aur Code</h1>
+
+    <!-- Action button to intercept and cancel the timer before it fires -->
+    <button id="stopTimerBtn">Stop Transformation</button>
+
+    <!--
+      ==============================================================================
+      JAVASCRIPT TIMERS & ASYNC FLOW REFERENCE SCRIPT
+      ==============================================================================
+    -->
+    <script>
+        /**
+         * ==============================================================================
+         * ASYNCHRONOUS JAVASCRIPT: setTimeout() & clearTimeout()
+         * ==============================================================================
+         * Key Concepts Covered:
+         * 1. `setTimeout(callback, delay, ...args)`: Schedules a function to run ONCE 
+         *    after a specified delay (in milliseconds).
+         * 2. `clearTimeout(timerID)`: Cancels a scheduled timer before its execution.
+         * 3. Timer References: `setTimeout` returns a unique numeric Timer ID, which is 
+         *    passed into `clearTimeout` to cancel execution.
+         * 4. Asynchronous Execution / Event Loop: Timers do NOT block the main thread.
+         *    They are handled by Web APIs and pushed to the Task Queue once ready.
+         */
+
+        // ------------------------------------------------------------------------------
+        // 1. CALLBACK FUNCTIONS
+        // ------------------------------------------------------------------------------
+        
+        // Simple console logging callback
+        const logGreeting = function () {
+            console.log("Greeting: Learning JS with Hitesh!");
+        };
+
+        // DOM modification callback
+        const updateHeadingContent = function () {
+            const headingElement = document.querySelector('#headingText');
+            headingElement.innerHTML = "Best JS Series on YouTube!";
+            console.log("Heading text updated successfully!");
+        };
+
+
+        // ------------------------------------------------------------------------------
+        // 2. SCHEDULING THE TIMER (setTimeout)
+        // ------------------------------------------------------------------------------
+        // Schedules `updateHeadingContent` to run after 2000 milliseconds (2 seconds).
+        // `scheduledTimerId` holds the numeric identifier needed if we want to cancel it.
+        const scheduledTimerId = setTimeout(updateHeadingContent, 2000);
+
+        console.log(`Timer initialized with ID: ${scheduledTimerId}`);
+
+
+        // ------------------------------------------------------------------------------
+        // 3. CANCELING THE TIMER (clearTimeout)
+        // ------------------------------------------------------------------------------
+        const stopButton = document.querySelector('#stopTimerBtn');
+
+        stopButton.addEventListener('click', function () {
+            // Cancels the pending execution linked to `scheduledTimerId`
+            clearTimeout(scheduledTimerId);
+            console.log(`Timer ID ${scheduledTimerId} stopped! Heading update canceled.`);
+        });
+
+
+        // ------------------------------------------------------------------------------
+        // 4. BONUS CONCEPT: PASSING ARGUMENTS TO TIMERS
+        // ------------------------------------------------------------------------------
+        /*
+         * Did you know? `setTimeout` accepts additional parameters after the delay, 
+         * which are automatically passed directly as arguments to your callback function!
+         * 
+         * Syntax: setTimeout(functionRef, delay, arg1, arg2, ...)
+         */
+
+        const printCustomMessage = function (name, platform) {
+            console.log(`[Bonus Timer] Hello ${name}, welcome to ${platform}!`);
+        };
+
+        // Runs after 3 seconds, passing "Hitesh" and "YouTube" into printCustomMessage
+        const bonusTimerId = setTimeout(printCustomMessage, 3000, "Hitesh", "YouTube");
+
+
+        // ------------------------------------------------------------------------------
+        // 5. REVISION NOTES: THE JAVASCRIPT EVENT LOOP
+        // ------------------------------------------------------------------------------
+        /*
+         * REVISION TIP FOR INTERVIEWS:
+         * 
+         * 1. Is JavaScript Single-Threaded? 
+         *    Yes, JS executes code line-by-line on a single thread.
+         * 
+         * 2. How does `setTimeout` work if JS is single-threaded?
+         *    `setTimeout` is NOT part of core JS engine—it is provided by the Web API (browser).
+         *    The browser tracks the countdown in the background. When the delay finishes, 
+         *    the callback is placed in the Task Queue (Callback Queue).
+         * 
+         * 3. When does it execute?
+         *    The Event Loop checks if the Call Stack is completely clear. Only when the 
+         *    stack is empty will the callback move from the Queue to the Stack to execute.
+         */
+    </script>
+</body>
+</html>
