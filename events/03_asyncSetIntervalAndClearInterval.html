@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asynchronous JavaScript | setInterval & clearInterval</title>
+</head>
+<body style="background-color: #212121; color: #fff;">
+    <h1>Chai aur JavaScript</h1>
+    
+    <!-- Controls to start and stop repeated execution -->
+    <button id="startBtn">Start</button>
+    <button id="stopBtn">Stop</button>
+
+    <!--
+      ==============================================================================
+      JAVASCRIPT REPEATING TIMERS REFERENCE SCRIPT
+      ==============================================================================
+    -->
+    <script>
+        /**
+         * ==============================================================================
+         * ASYNCHRONOUS JAVASCRIPT: setInterval() & clearInterval()
+         * ==============================================================================
+         * Key Concepts Covered:
+         * 1. `setInterval(callback, interval, ...args)`: Repeatedly executes a callback 
+         *    function at specified time intervals (in milliseconds).
+         * 2. `clearInterval(intervalID)`: Cancels a running repeating timer.
+         * 3. State Guarding: Preventing memory leaks and duplicate timer bugs when users 
+         *    click the "Start" button multiple times.
+         * 4. Passing Arguments: Extra arguments after the delay are automatically passed 
+         *    to the callback function.
+         */
+
+        // ------------------------------------------------------------------------------
+        // 1. CALLBACK FUNCTION
+        // ------------------------------------------------------------------------------
+        /**
+         * Logs a custom message alongside the current timestamp in milliseconds.
+         * @param {string} customMessage - Text passed automatically by setInterval
+         */
+        const logCurrentTimestamp = function (customMessage) {
+            console.log(`[${customMessage}] Current Timestamp:`, Date.now());
+        };
+
+
+        // ------------------------------------------------------------------------------
+        // 2. INTERVAL CONTROL & STATE MANAGEMENT
+        // ------------------------------------------------------------------------------
+        // Stores the active interval reference. Initialized to `null` to check state.
+        let repeatingIntervalId = null;
+
+        const startButton = document.querySelector('#startBtn');
+        const stopButton = document.querySelector('#stopBtn');
+
+        // --- Start Action ---
+        startButton.addEventListener('click', function () {
+            // Guard Clause: Prevent starting a new interval if one is already running!
+            // If ignored, clicking "Start" multiple times creates orphan intervals that can't be stopped.
+            if (repeatingIntervalId === null) {
+                // Starts timer repeating every 1000ms (1 sec), passing "hi" as the argument
+                repeatingIntervalId = setInterval(logCurrentTimestamp, 1000, "hi");
+                console.log(`Interval started with ID: ${repeatingIntervalId}`);
+            } else {
+                console.log("An interval is already running!");
+            }
+        });
+
+        // --- Stop Action ---
+        stopButton.addEventListener('click', function () {
+            // Cancels the ongoing interval using its numeric ID
+            clearInterval(repeatingIntervalId);
+            
+            // Best Practice: Reset variable to null so the Start button can be used again cleanly
+            repeatingIntervalId = null;
+            
+            console.log("Interval cleared successfully!");
+        });
+
+
+        // ------------------------------------------------------------------------------
+        // 3. REVISION SUMMARY: setTimeout vs setInterval
+        // ------------------------------------------------------------------------------
+        /*
+         * CORE DIFFERENCES TO REMEMBER FOR REVISION:
+         * 
+         * 1. `setTimeout(fn, delay)`
+         *    - Executes `fn` ONCE after `delay` milliseconds.
+         *    - Canceled using `clearTimeout(id)`.
+         * 
+         * 2. `setInterval(fn, interval)`
+         *    - Executes `fn` REPEATEDLY every `interval` milliseconds until explicitly stopped.
+         *    - Canceled using `clearInterval(id)`.
+         * 
+         * ⚠️ PERFORMANCE CAVEAT:
+         * Standard `setInterval` does NOT guarantee exact timing if the execution inside 
+         * the callback takes longer than the interval delay itself. For heavy tasks or complex 
+         * animations, recursive `setTimeout` or `requestAnimationFrame` is preferred.
+         */
+    </script>
+</body>
+</html>
